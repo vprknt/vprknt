@@ -1,1 +1,47 @@
-Coming Soon
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      img {
+        width: 25%;
+        height: auto;
+        object-fit: cover;
+        margin: 5px;
+      }
+      @media (max-width: 768px) {
+        img {
+          width: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <script>
+        async function generateImageElements() {
+          const container = document.querySelector('.container');
+          const response = await fetch('./img/');
+          const text = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(text, 'text/html');
+          const links = doc.querySelectorAll('a');
+          for (const link of links) {
+            if (link.href.endsWith('.png')) {
+              const imgElement = document.createElement('img');
+              imgElement.src = link.href;
+              imgElement.alt = link.textContent;
+              container.appendChild(imgElement);
+            }
+          }
+        }
+        generateImageElements();
+      </script>
+    </div>
+  </body>
+</html>
